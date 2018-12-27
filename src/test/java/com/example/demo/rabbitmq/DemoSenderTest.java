@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class DemoSenderTest {
 
     @Autowired
-    private DemoSender sender;
+    private DemoSender sender; //sender
 
     @Test
     public void testSend(){
