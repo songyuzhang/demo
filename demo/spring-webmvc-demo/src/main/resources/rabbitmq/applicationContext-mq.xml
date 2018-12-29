@@ -1,0 +1,35 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/rabbit
+    http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
+
+    <description>rabbitmq连接服务配置</description>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath:connection.properties"></property>
+    </bean>
+    <!-- 连接配置 -->
+    <rabbit:connection-factory id="connectionFactory"
+                               host="${rabbitmq.host}"
+                               username="${rabbitmq.username}"
+                               password="${rabbitmq.password}"
+                               port="${rabbitmq.port}"/>
+    <rabbit:admin connection-factory="connectionFactory"/>
+
+    <bean id="serializerMessageConverter" class="org.springframework.amqp.support.converter.SimpleMessageConverter" />
+    <!--  申明一个消息队列Queue   -->
+    <rabbit:queue id="demo" name="${rabbitmq.demo.queue}" durable="true" auto-delete="false" exclusive="false"/>
+
+    <!-- 创建rabbitTemplate 消息模板类 -->
+    <bean id="rabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <constructor-arg ref="connectionFactory" />
+        <property name="exchange" value="${rabbitmq.demo.exchange}" />
+        <property name="routingKey" value="${rabbitmq.demo.routingKey}" />
+        <property name="queue" value="${rabbitmq.demo.queue}" />
+        <property name="messageConverter" ref="serializerMessageConverter" />
+    </bean>
+
+</beans>
