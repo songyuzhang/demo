@@ -26,6 +26,7 @@ public class DemoController {
     @ResponseBody
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public ModelAndView index() {
+
         System.out.println("in.................");
         String result = dubboDemoService.sendDemo("1233");
 
